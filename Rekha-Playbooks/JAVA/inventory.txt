@@ -1,0 +1,15 @@
+[JAVA]
+g52pa00003007.az12.dal.cpc.ibm.com
+g51pa00003008.az11.dal.cpc.ibm.com
+g52pa00003009.az12.dal.cpc.ibm.com
+g51pa00003010.az11.dal.cpc.ibm.com
+g51pa00003011.az11.dal.cpc.ibm.com
+g52pa00003012.az12.dal.cpc.ibm.com
+g51pa00003013.az11.dal.cpc.ibm.com
+g52pa00003014.az12.dal.cpc.ibm.com
+g51pa00003015.az11.dal.cpc.ibm.com
+g52pa00003016.az12.dal.cpc.ibm.com
+g51pa00003017.az11.dal.cpc.ibm.com
+g52pa00003018.az12.dal.cpc.ibm.com
+g51pa00003019.az11.dal.cpc.ibm.com
+g52pa00003020.az12.dal.cpc.ibm.com

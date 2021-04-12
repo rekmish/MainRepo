@@ -1,0 +1,60 @@
+---
+ - hosts: TSM
+   become: yes
+   serial: 1
+   vars_prompt: 
+    - name: servername
+      prompt: "Servername as per Blueiron Portal"
+      private: no
+    - name: TCPIP
+      prompt: "enter TCP IP address as per Blueiron Portal"
+      private: no
+    - name: CID
+      prompt: "Enter node name as per Blueiron Portal"
+      private: no
+   tasks: 
+    - name: "Copy TSM backupage from local to remote"
+      copy:
+       src: "/home/ansible/Rekha-Playbooks/TSMPlaybooks-AIX/TSMPackages"
+       dest: "/tmp/"
+       mode: '0777' 
+   
+    - name: "Install TSM Package"
+      installp:
+       name: all
+       repository_path: /tmp/TSMPackages
+       accept_license: yes
+       state: present
+ 
+    - name: "Edit dsm.opt"
+      template:
+        src: /home/ansible/Rekha-Playbooks/TSMPlaybooks-AIX/dsm.opt
+        dest: /usr/tivoli/tsm/client/ba/bin64/dsm.opt
+        mode: '755'
+
+    - name: "Edit the dsm.sys file"
+      template:
+        src: /home/ansible/Rekha-Playbooks/TSMPlaybooks-AIX/dsm.sys 
+        dest: /usr/tivoli/tsm/client/ba/bin64/dsm.sys
+        mode: '755'
+    
+    - name: "Create initsched"
+      template:
+        src: /home/ansible/Rekha-Playbooks/TSMPlaybooks-AIX/init_sched.sh
+        dest: /usr/tivoli/tsm/client/ba/bin64/init_sched.sh
+        mode: '755'
+
+    - name: "Take inittab backup"
+      command:
+       cmd: "cp /etc/inittab /etc/inittab.bak.beforetsm"
+
+    - name: "add tsm entry in inittab"
+      aix_inittab:
+       name: tsm
+       runlevel: 2
+       action: once
+       command: /usr/tivoli/tsm/client/ba/bin64/dsmcad -optfile=/usr/tivoli/tsm/client/ba/bin64/dsm.opt >/dev/null # OS backup
+       state: present
+
+    - name: "start dsm service"
+      command: sh /usr/tivoli/tsm/client/ba/bin64/init_sched.sh
