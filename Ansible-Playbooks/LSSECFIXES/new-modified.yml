@@ -1,0 +1,84 @@
+---
+ - name: "Download and run lssecfixes"
+   hosts: LSSEC
+   become: true
+   vars:
+    local_dir: /home/ansible/Rekha-Playbooks/LSSECFIXES
+    remote_dir: /home/ansible/
+   tasks:
+
+    - name: "Remove lssecfixes directory"
+      file:
+       path: "{{ local_dir}}/lssecfixes-tool"
+       state: absent
+      delegate_to: localhost
+      run_once: yes
+
+    - name: "Remove Redhat secfixdb if exist"
+      file: 
+       path: "{{ local_dir}}/secfixdb.RedHat7Server"
+       state: absent
+      delegate_to: localhost
+      run_once: yes
+
+    - name: "Remove AIX secfixdb if exist"
+      file: 
+       path: "{{ local_dir}}/secfixdb.aix72"
+       state: absent
+      delegate_to: localhost
+      run_once: yes
+
+    - name: "Download lssecfixes from git"
+      shell:
+       cmd: cd "{{ local_dir }}" && git clone git@github.ibm.com:lssecfixes/lssecfixes-tool.git
+      delegate_to: localhost 
+      become: no
+      run_once: yes
+
+    - name: "Download Redhat secfixdb from git"
+      shell: 
+       cmd: cd "{{ local_dir }}" && git clone git@github.ibm.com:lssecfixes/secfixdb.RedHat7Server.git
+      delegate_to: localhost
+      become: no
+      run_once: yes
+
+    - name: "Download AIX secfixdb from git"
+      shell: 
+       cmd: cd "{{ local_dir }}" && git clone git@github.ibm.com:lssecfixes/secfixdb.aix72.git
+      delegate_to: localhost
+      become: no
+      run_once: yes
+
+    - name: "Copy from local to remote"
+      copy:
+       src: "{{ local_dir }}/lssecfixes-tool/lssecfixes"
+       dest: "{{ remote_dir }}"
+       owner: ansible
+       mode: '0777'
+
+    - name: "Copy Redhat secfixdb local to remote"
+      copy:
+       src: "{{ local_dir }}/secfixdb.RedHat7Server/secfixdb.RedHat7Server"
+       dest: "{{ remote_dir }}"
+       owner: ansible
+       mode: '0777'
+      when: ansible_distribution == "RedHat"
+
+    - name: "Copy AIX secfixdb local to remote"
+      copy:
+       src: "{{ local_dir }}/secfixdb.aix72/secfixdb.aix72"
+       dest: "{{ remote_dir }}"
+       owner: ansible
+       mode: '0777'
+      when: ansible_distribution == "AIX"
+
+
+    - name: "Run lssecfixes report"
+      shell: "{{ remote_dir }}lssecfixes -s itss"
+      become: true
+      register: lssecfixes_output 
+ 
+    - name: "Print lssecfixes output"
+      debug: 
+        var: lssecfixes_output.stdout_lines
+

@@ -1,0 +1,3 @@
+[TSM]
+g51xr00003046.az11.dal.cpc.ibm.com
+g51xr00003021.az11.dal.cpc.ibm.com
