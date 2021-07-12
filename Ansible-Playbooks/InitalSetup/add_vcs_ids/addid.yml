@@ -1,0 +1,63 @@
+##Please read readme, before running the play, Thank you##
+---
+ - name: "Create id on new cloud Linux servers"
+   hosts: LINUX
+   become: yes
+   vars_files:
+      - users_list
+      - password.yml
+   tasks:
+     - name: "Check if the group exist, if not create it"
+       group:
+         name: "{{ item }}"
+         state: present 
+       loop:
+         - users
+         - linuxadmin
+
+     - name: "Create users on servers"
+       user: 
+         name: "{{ item.name }}"
+         comment: "{{ item.comment }}"
+         group: users
+         groups: linuxadmin
+         shell: '/bin/bash'
+         home: "/home/{{ item.name }}"
+         password: "{{ user_password | password_hash('sha512') }}"
+         update_password: always
+         state: present
+       loop: "{{ users }}"
+         
+
+     - name: "Force password to change login at first login"
+       command: "chage -d 0 {{ item.name }}"
+       loop: "{{ users }}"
+
+ - name: "Create id on new AIX servers"
+   hosts: AIX
+   become: yes
+   vars_files:
+     - users_list
+     - password.yml
+   tasks:
+     - name: "Check if the group exists, if not create it"
+       group:
+         name: "{{ item }}"
+         state: present 
+       loop:
+         - staff
+         - aixadmin
+
+     - name: "Create users on AIX servers"
+       user: 
+        name: "{{ item.name }}"
+        comment: "{{ item.comment }}"
+        group: staff
+        groups: aixadmin
+        shell: '/usr/bin/ksh'
+        home: "/home/{{ item.name }}"
+        password: "{{ user_password | password_hash('sha512') }}"
+        update_password: always
+        state: present
+       loop: "{{ users }}"
+

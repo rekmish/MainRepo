@@ -1,0 +1,39 @@
+---
+# vars file for TSM-Blueiron
+#
+serverdetails:
+ - servername: g52pa00004455  
+   CID: cid01186-g52pa00004455-fil-00
+   TCPIP: 9.214.222.11
+
+ - servername: g51pa00004420      
+   CID: cid01185-g51pa00004420-fil-00
+   TCPIP: 9.214.156.12
+
+ - servername: g52pa00004456      
+   CID: cid01186-g52pa00004456-fil-00
+   TCPIP: 9.214.222.11
+
+ - servername: g51pa00004421      
+   CID: cid01185-g51pa00004421-fil-00
+   TCPIP: 9.214.156.12
+
+ - servername: g52pa00004457      
+   CID: cid01186-g52pa00004457-fil-00
+   TCPIP: 9.214.222.11
+
+ - servername: g51pa00004422      
+   CID: cid01185-g51pa00004422-fil-00
+   TCPIP: 9.214.156.12
+
+ - servername: g52pa00004458      
+   CID: cid01186-g52pa00004458-fil-00
+   TCPIP: 9.214.222.11
+
+ - servername: g51pa00004423      
+   CID: cid01185-g51pa00004423-fil-00
+   TCPIP: 9.214.156.12
+
+ - servername: g52pa00004459      
+   CID: cid01186-g52pa00004459-fil-00
+   TCPIP: 9.214.222.11
