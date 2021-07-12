@@ -1,0 +1,16 @@
+servername {{ servername }}_OS 
+COMMMethod         TCPip
+SSL                YES
+TCPPort            8500
+TCPServeraddress   {{ TCPIP }} 
+NODename           {{ CID }}
+PASSWORDAccess     generate
+TCPNodelay         yes
+errorlogname       /opt/tivoli/tsm/client/ba/bin/logs_{{ servername }}/dsmerror.log
+schedlogname       /opt/tivoli/tsm/client/ba/bin/logs_{{ servername }}/dsmsched.log
+SCHEDLOGRetention  7 D
+ERRORLOGRetention  7 D
+TCPWINDOWSIZE 0
+HTTPPORT 1581
+WEBPORTS 15810 15811
+MANAGEDServices webclient schedule

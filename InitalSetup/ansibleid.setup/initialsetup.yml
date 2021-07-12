@@ -1,0 +1,49 @@
+--- 
+ - name: "Playbook to setup ansible id on all new server"
+   hosts: all
+   become: yes
+   gather_facts: yes
+   tasks:
+     - name: "Create ansible user"
+       user:
+         name: ansible 
+         group: functids
+         state: present
+
+     - name: "Copy ansible authrozied key to dest server"
+       authorized_key:
+         user: ansible 
+         state: present
+         key: "{{ lookup('file', '/home/ansible/.ssh/id_rsa.pub') }}"
+      
+     - name: "Take sudoers backup"
+       shell: 'cp -p /etc/sudoers /etc/sudoers.{{ ansible_date_time.date }}.{{ ansible_date_time.time }}.bkp'
+
+     - name: "Setup sudoers"
+       lineinfile:
+         path: /etc/sudoers
+         line: 'ansible ALL=(ALL) NOPASSWD:ALL'
+         insertbefore: '^ALL ALL=!SUDOSUDO'
+         validate: /usr/sbin/visudo -cf %s
+
+ - name: Extra config on aix servers
+   hosts: AIX
+   become: yes
+   tasks:      
+     - name: "Take backup of sshd config file"
+       shell: "cp -p /etc/ssh/sshd_config /etc/ssh/sshd_config.{{ ansible_date_time.date }}.{{ ansible_date_time.time }}.bkp"
+
+     - name: Get the list of users in group functids to be added to Match User file
+       shell: /usr/bin/lsgroup -a users functids | /usr/bin/awk -F= '{print $2}'
+       register: functids_users
+
+     - name: "Append to sshd"
+       lineinfile:
+         path: /etc/ssh/sshd_config 
+         regex: '^Match User'
+         line: 'Match User {{ functids_users.stdout_lines[0] }}'
+
+     - name: Restart sshd
+       service: 
+         name: sshd 
+         state: restarted
