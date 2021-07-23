@@ -9,7 +9,7 @@
          group: nobody
          groups: infrnw,functids
          append: yes
-         comment: 744/S/AVRXFU//*FUNCTIONAL-ID*.AHGI System Account SSCPROCLOGS1/ahgisssc@in.ibm.com
+         comment: Rekha Mishra
 
      - name: "Check if the home directory exist, if not create one and set right perms"
        file:
